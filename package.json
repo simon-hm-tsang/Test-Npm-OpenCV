@@ -1,0 +1,13 @@
+{
+  "name": "TestOpenCV",
+  "version": "1.0.0",
+  "description": "Video capture",
+  "main": "Run.js",
+  "license": "MIT",
+  "dependencies": {
+    "opencv4nodejs": "^4.15.0"
+  },
+  "scripts": {
+    "start": "node ./Run.js $Classname"
+  }
+}
