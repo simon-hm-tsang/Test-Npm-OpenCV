@@ -1,7 +1,8 @@
 const OpenCVConfig = {
     // Webcam capture
-    // rtsp example: "rtsp://admin:P@ssword654321@192.168.1.20:554/h264/1/main/av_stream"
-    cameraConnectionString: 0, // 0 = device cam, could be a rtsp (above example)
+    // rtsp example: "rtsp://admin:P@ssword654321@210.3.200.151:554/h264/1/main/av_stream" [Ubuntu version, latest]
+    // local example: 0 [Local camera, latest]
+    cameraConnectionString: "rtsp://admin:P@ssword654321@210.3.200.151:554/h264/1/main/av_stream",
     
     // Face recognition for static picture
     imageFileName: '1080pCrowd', // any image file name in ./TestFace
