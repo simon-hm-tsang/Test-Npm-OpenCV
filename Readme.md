@@ -1,4 +1,6 @@
-Make sure "windows-build-tools" is installed globally with npm for Windows OS
+* Make sure "windows-build-tools" is installed globally with npm for Windows OS
+
+* Install node-gyp in npm global as well
 
 StaticFaceRecognition.js
 ===============================================
