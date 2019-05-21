@@ -8,6 +8,8 @@
     "opencv4nodejs": "^4.15.0"
   },
   "scripts": {
-    "start": "node ./Run.js $Classname"
+    "install": "npm i -g windows-build-tools && npm i -g node-gyp",
+    "startCapture": "node ./Run.js CameraCapture",
+    "startStaticFaceRecognition": "node ./Run.js StaticFaceRecognition"
   }
 }
