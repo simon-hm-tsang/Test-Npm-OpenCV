@@ -20,7 +20,7 @@ class StaticFaceRecognition {
         const { objects } = this.classifier.detectMultiScale(imgMatrix, { minNeighbors: this.minNeighbors });
 
         for (let i = 0; i < objects.length; i++) {
-            OpenCV.drawDetection(imgMatrix, objects[i]);
+            console.log(OpenCV.drawDetection(imgMatrix, objects[i]));
         }
     }
 
