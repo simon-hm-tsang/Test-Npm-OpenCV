@@ -31,7 +31,7 @@ class StaticFaceRecognition {
     
         this._DrawDetection(frame);
     
-        OpenCV.imshowWait('cap', frame);
+        //OpenCV.imshowWait('cap', frame);
     }
 
     Run() {
