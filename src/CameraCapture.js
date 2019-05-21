@@ -5,6 +5,7 @@ class CameraCapture {
     constructor(cameraConnectionString = OpenCVConfig.cameraConnectionString){
         this.webcamCapture = new OpenCV.VideoCapture(cameraConnectionString);
         this.fps =  this.webcamCapture.get(OpenCV.CAP_PROP_FPS);
+        this.frame = null;
     }
     
     static GetLocalImageFolderName(withFileName = false) {
@@ -26,17 +27,24 @@ class CameraCapture {
         const fileSystem = require('fs');
         const folderName = CameraCapture.GetLocalImageFolderName();
         
-        fileSystem.exists('./WebcamShot', (exists) => {
-            if(!exists){
-                fileSystem.mkdir('./WebcamShot');
-            }
+        const promise = new Promise((resolve, reject) => {
+            fileSystem.exists(folderName, (exists) => {
+                if(!exists){
+                    fileSystem.mkdir(folderName, (err) => {
+                        if(err) {
+                            console.log(err);
+                            reject(err);
+                        }
+
+                        resolve(true);
+                    });
+                }else{
+                    resolve(true);
+                }
+            });
         });
 
-        fileSystem.exists(folderName, (exists) => {
-            if(!exists){
-                fileSystem.mkdir(CameraCapture.GetLocalImageFolderName());
-            }
-        });
+        return promise;
     }
     
     _ScreenLog() {
@@ -51,30 +59,43 @@ class CameraCapture {
         OpenCV.imwrite(`${CameraCapture.GetLocalImageFolderName(true)}`, imgMatrix);
     }
     
+    _Read(){
+        return this.webcamCapture.read().bgrToGray();
+    }
+
     _Stream() {
-        const beingTime = Date.now();
+        let interval = 0;
 
-        const frame = this.webcamCapture.read().bgrToGray();
-        if(frame.empty){
-            return;
-        }
+        while(true){
+            let whileStart = Date.now();
+
+            this.frame = this._Read();
+            if(this.frame.empty){
+                console.log("empty");
+                this.webcamCapture.reset();
+                this.frame = this._Read();
+            }
         
-        // OpenCV.imshow("cap", frame);
-        this._SaveImage(frame);
-        OpenCV.waitKey(this.fps);
+            OpenCV.imshow("cap", this.frame);
+            OpenCV.waitKey(1);
 
-        // Recursive with 1s timer
-        setTimeout(
-            () => {
-                this._Stream();
-            }, 
-            1000 - (Date.now() - beingTime)
-        );
+            interval += Date.now() - whileStart;
+            if(interval >= OpenCVConfig.screenshotInterval){
+                this._ScreenShot();
+                interval = 0;
+            }
+        }
+    }
+
+    _ScreenShot() {
+        this._SaveImage(this.frame);
     }
     
-    Start() {
+    async Start() {
         this._ScreenLog();
-        this._CreateLocalWebcamCaptureFolder();
+        await this._CreateLocalWebcamCaptureFolder();
+        
+        // Recursive with 1s timer
         this._Stream();
 
         // .release() would be automatically called by destructor
